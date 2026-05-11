@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class FotoVeiculo extends Model
 {
     protected $table = 'fotos_veiculos';
-    protected $fillable = ['veiculo_id', 'foto_path', 'ordem'];
+    
+    protected $fillable = [
+        'veiculo_id', 'caminho', 'foto_path', 'ordem', 'principal'
+    ];
     
     public function veiculo()
     {

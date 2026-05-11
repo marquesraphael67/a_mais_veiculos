@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;  // ← IMPORTANTE: com Admin
 
+use App\Http\Controllers\Controller;
 use App\Models\Marca;
 use Illuminate\Http\Request;
 
@@ -9,7 +10,7 @@ class AdminMarcaController extends Controller
 {
     public function index()
     {
-        $marcas = Marca::orderBy('nome', 'asc')->paginate(15);
+        $marcas = Marca::withCount('veiculos')->get();
         return view('admin.marcas.index', compact('marcas'));
     }
     
@@ -21,7 +22,8 @@ class AdminMarcaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => 'required|string|max:50|unique:marcas',
+            'nome' => 'required|string|max:100|unique:marcas',
+            'descricao' => 'nullable|string'
         ]);
         
         Marca::create($request->all());
@@ -41,7 +43,8 @@ class AdminMarcaController extends Controller
         $marca = Marca::findOrFail($id);
         
         $request->validate([
-            'nome' => 'required|string|max:50|unique:marcas,nome,' . $id,
+            'nome' => 'required|string|max:100|unique:marcas,nome,' . $id,
+            'descricao' => 'nullable|string'
         ]);
         
         $marca->update($request->all());
@@ -54,9 +57,10 @@ class AdminMarcaController extends Controller
     {
         $marca = Marca::findOrFail($id);
         
+        // Verificar se tem veículos vinculados
         if ($marca->veiculos()->count() > 0) {
             return redirect()->route('admin.marcas.index')
-                ->with('error', 'Não é possível excluir esta marca pois existem veículos vinculados.');
+                ->with('error', 'Não é possível excluir esta marca pois ela possui veículos vinculados.');
         }
         
         $marca->delete();

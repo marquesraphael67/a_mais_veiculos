@@ -162,7 +162,10 @@ function toggleCampos() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', toggleCampos);
+// No edit, após carregar, executar a função também
+document.addEventListener('DOMContentLoaded', function() {
+    toggleCamposPorTipo();
+});
 document.getElementById('tipo_veiculo')?.addEventListener('change', toggleCampos);
 </script>
 @endsection

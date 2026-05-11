@@ -6,19 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
-        Schema::create('fotos_veiculos', function (Blueprint $table) {
+        Schema::create('veiculo_fotos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('veiculo_id')->constrained('veiculos')->onDelete('cascade');
-            $table->string('foto_path');
-            $table->integer('ordem')->default(0);
+            $table->foreignId('veiculo_id')->constrained()->onDelete('cascade');
+            $table->string('caminho');
+            $table->boolean('principal')->default(false);
             $table->timestamps();
         });
     }
-
-    public function down(): void
+    
+    public function down()
     {
-        Schema::dropIfExists('fotos_veiculos');
+        Schema::dropIfExists('veiculo_fotos');
     }
 };

@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Veiculo extends Model
 {
     protected $fillable = [
-        'marca_id', 'modelo', 'ano', 'preco', 'preco_antigo', 'desconto_maximo',
-        'km', 'horas_uso', 'cor', 'combustivel', 'portas', 'descricao', 'obs_admin',
-        'imagem_destaque', 'status', 'tipo_veiculo'
-    ];
+    'marca_id', 'modelo', 'ano', 'preco', 'preco_antigo', 'desconto_maximo',
+    'km', 'horas_uso', 'cor', 'combustivel', 'portas', 'descricao', 'obs_admin',  // ← obs_admin aqui
+    'imagem_destaque', 'status', 'tipo_veiculo'
+];
     
     protected $casts = [
         'preco' => 'decimal:2',
