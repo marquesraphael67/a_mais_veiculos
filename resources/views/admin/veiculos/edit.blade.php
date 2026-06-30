@@ -6,10 +6,7 @@
 <div class="form-container">
     <div class="page-header mb-4">
         <div>
-            <h2 class="mb-1">
-                <i class="fas fa-pen-to-square me-2"></i>
-                Editar Veículo
-            </h2>
+            <h2 class="mb-1"><i class="fas fa-pen-to-square me-2"></i>Editar Veículo</h2>
             <p class="text-muted mb-0">Atualize as informações e fotos do veículo.</p>
         </div>
 
@@ -17,6 +14,17 @@
             <i class="fas fa-arrow-left me-1"></i> Voltar
         </a>
     </div>
+
+    @if ($errors->any())
+        <div class="alert alert-danger rounded-4">
+            <strong>Corrija os erros abaixo:</strong>
+            <ul class="mb-0 mt-2">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <form action="{{ route('admin.veiculos.update', $veiculo->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -115,18 +123,36 @@
 
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">Preço *</label>
+                    <label class="form-label">Preço <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text">R$</span>
-                        <input type="number" step="0.01" name="preco" class="form-control" value="{{ old('preco', $veiculo->preco) }}" required>
+                        <input
+                            type="text"
+                            id="preco_formatado"
+                            class="form-control money-mask"
+                            required
+                            value="{{ old('preco', $veiculo->preco) ? number_format((float) old('preco', $veiculo->preco), 2, ',', '.') : '' }}"
+                            placeholder="0,00"
+                            inputmode="numeric"
+                        >
+                        <input type="hidden" name="preco" id="preco" value="{{ old('preco', $veiculo->preco) }}">
                     </div>
+                    <small class="text-muted">Digite apenas números. Ex: 5499000 vira 54.990,00.</small>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Preço Antigo</label>
                     <div class="input-group">
                         <span class="input-group-text">R$</span>
-                        <input type="number" step="0.01" name="preco_antigo" class="form-control" value="{{ old('preco_antigo', $veiculo->preco_antigo) }}">
+                        <input
+                            type="text"
+                            id="preco_antigo_formatado"
+                            class="form-control money-mask"
+                            value="{{ old('preco_antigo', $veiculo->preco_antigo) ? number_format((float) old('preco_antigo', $veiculo->preco_antigo), 2, ',', '.') : '' }}"
+                            placeholder="0,00"
+                            inputmode="numeric"
+                        >
+                        <input type="hidden" name="preco_antigo" id="preco_antigo" value="{{ old('preco_antigo', $veiculo->preco_antigo) }}">
                     </div>
                 </div>
             </div>
@@ -135,8 +161,8 @@
         <div class="form-section">
             <h5>Imagens</h5>
 
-            <label class="form-label">Imagem Destaque Atual</label>
-            <div class="image-preview mb-3" id="preview_destaque_atual">
+            <label class="form-label">Imagem destaque atual</label>
+            <div class="image-preview mb-4">
                 @if($veiculo->imagem_destaque)
                     <div class="preview-item">
                         <img src="{{ asset('storage/' . $veiculo->imagem_destaque) }}" alt="Destaque atual">
@@ -147,21 +173,22 @@
                 @endif
             </div>
 
-            <label class="form-label">Trocar Imagem Destaque</label>
-            <div class="upload-box mb-3">
-                <input type="file" name="imagem_destaque" id="imagem_destaque" class="form-control" accept="image/*">
-                <small class="text-muted">Só selecione se quiser trocar a imagem principal.</small>
+            <div class="upload-area mb-4" id="dropDestaque">
+                <input type="file" name="imagem_destaque" id="imagem_destaque" accept="image/*" hidden>
+                <div class="upload-content">
+                    <i class="fas fa-star"></i>
+                    <strong>Trocar imagem destaque</strong>
+                    <span>Clique ou arraste uma nova foto principal aqui</span>
+                </div>
             </div>
+
             <div id="preview_destaque" class="image-preview mb-4"></div>
 
-            <label class="form-label">Galeria Atual</label>
-            <div class="image-preview mb-4">
+            <label class="form-label">Galeria atual</label>
+            <div class="image-preview mb-4" id="galeria_atual">
                 @forelse($veiculo->fotos as $foto)
-                    <div class="preview-item">
-                        <a href="{{ route('admin.veiculos.delete-foto', $foto->id) }}"
-                           class="remove-img"
-                           onclick="return confirm('Remover esta foto?')">×</a>
-
+                    <div class="preview-item old-photo" id="foto-antiga-{{ $foto->id }}">
+                        <button type="button" class="remove-img" onclick="deletarFotoAntiga({{ $foto->id }})">×</button>
                         <img src="{{ asset('storage/' . ($foto->foto_path ?? $foto->caminho)) }}" alt="Foto">
                         <span>Atual</span>
                     </div>
@@ -170,11 +197,19 @@
                 @endforelse
             </div>
 
-            <label class="form-label">Adicionar Novas Fotos</label>
-            <div class="upload-box">
-                <input type="file" name="fotos[]" id="fotos_input" class="form-control" accept="image/*" multiple>
-                <small class="text-muted">As novas fotos serão adicionadas junto das atuais.</small>
+            <div class="upload-area" id="dropFotos">
+                <input type="file" name="fotos[]" id="fotos_input" accept="image/*" multiple hidden>
+                <div class="upload-content">
+                    <i class="fas fa-images"></i>
+                    <strong>Adicionar novas fotos</strong>
+                    <span>Clique ou arraste várias fotos aqui</span>
+                </div>
             </div>
+
+            <small class="text-muted d-block mt-2">
+                As fotos novas serão adicionadas sem apagar as atuais. Você pode remover e arrastar para mudar a ordem das novas.
+            </small>
+
             <div id="preview_imagens" class="image-preview mt-3"></div>
         </div>
 
@@ -196,6 +231,7 @@
 
         <div class="d-flex justify-content-between flex-wrap gap-2 mt-4">
             <a href="{{ route('admin.veiculos.index') }}" class="btn btn-secondary px-4">Cancelar</a>
+
             <button type="submit" class="btn btn-primary px-5">
                 <i class="fas fa-save me-1"></i> Atualizar Veículo
             </button>
@@ -204,10 +240,9 @@
 </div>
 
 <style>
-    .form-container {
-        max-width: 1100px;
-        margin: 0 auto;
-    }
+    body { background: #f5f7fb; }
+
+    .form-container { max-width: 1100px; margin: 0 auto; }
 
     .page-header {
         background: linear-gradient(135deg, #111827, #1e3c72);
@@ -222,13 +257,8 @@
         box-shadow: 0 14px 35px rgba(17,24,39,.18);
     }
 
-    .page-header h2 {
-        font-weight: 800;
-    }
-
-    .page-header p {
-        color: rgba(255,255,255,.75) !important;
-    }
+    .page-header h2 { font-weight: 800; }
+    .page-header p { color: rgba(255,255,255,.75) !important; }
 
     .form-section {
         background: white;
@@ -247,11 +277,7 @@
         padding-left: 12px;
     }
 
-    .form-label {
-        font-weight: 700;
-        color: #374151;
-        font-size: 14px;
-    }
+    .form-label { font-weight: 700; color: #374151; font-size: 14px; }
 
     .form-control,
     .form-select {
@@ -260,11 +286,38 @@
         padding: 11px 13px;
     }
 
-    .upload-box {
+    .upload-area {
         border: 2px dashed #cfd8e3;
         background: #f8fafc;
-        border-radius: 18px;
-        padding: 18px;
+        border-radius: 20px;
+        padding: 28px;
+        text-align: center;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .upload-area:hover,
+    .upload-area.dragover {
+        border-color: #1e3c72;
+        background: #eef4ff;
+    }
+
+    .upload-content i {
+        font-size: 32px;
+        color: #1e3c72;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .upload-content strong {
+        display: block;
+        color: #111827;
+        font-weight: 900;
+    }
+
+    .upload-content span {
+        color: #6b7280;
+        font-size: 14px;
     }
 
     .image-preview {
@@ -275,13 +328,19 @@
 
     .preview-item {
         position: relative;
-        width: 135px;
-        height: 115px;
+        width: 145px;
+        height: 120px;
         border-radius: 16px;
         overflow: hidden;
         background: #f1f5f9;
         border: 1px solid #e5e7eb;
         box-shadow: 0 8px 20px rgba(0,0,0,.08);
+        cursor: grab;
+    }
+
+    .preview-item.dragging {
+        opacity: .45;
+        transform: scale(.96);
     }
 
     .preview-item img {
@@ -299,7 +358,7 @@
         padding: 4px 8px;
         border-radius: 999px;
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .remove-img {
@@ -314,16 +373,12 @@
         color: white;
         font-size: 20px;
         font-weight: bold;
-        line-height: 24px;
-        text-align: center;
-        text-decoration: none;
+        line-height: 22px;
         z-index: 10;
+        box-shadow: 0 5px 15px rgba(0,0,0,.25);
     }
 
-    .remove-img:hover {
-        background: #b91c1c;
-        color: white;
-    }
+    .remove-img:hover { background: #b91c1c; }
 
     .btn {
         border-radius: 13px;
@@ -331,34 +386,61 @@
         padding: 11px 20px;
     }
 
-    .btn-primary {
-        background: #1e3c72;
-        border: none;
-    }
-
-    .btn-secondary {
-        background: #6b7280;
-        border: none;
-    }
+    .btn-primary { background: #1e3c72; border: none; }
+    .btn-secondary { background: #6b7280; border: none; }
 
     @media (max-width: 768px) {
-        .page-header {
-            padding: 20px;
-        }
-
-        .form-section {
-            padding: 18px;
-        }
-
-        .preview-item {
-            width: 105px;
-            height: 95px;
-        }
+        .page-header { padding: 20px; }
+        .form-section { padding: 18px; }
+        .preview-item { width: 105px; height: 95px; }
     }
 </style>
 
 <script>
 let fotosSelecionadas = [];
+let draggedIndex = null;
+
+
+function formatMoney(value) {
+    value = String(value || '').replace(/\D/g, '');
+
+    if (!value) {
+        return '';
+    }
+
+    const numero = Number(value) / 100;
+
+    return numero.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function unformatMoney(value) {
+    if (!value) return '';
+
+    return String(value)
+        .replace(/\./g, '')
+        .replace(',', '.');
+}
+
+function setupMoneyMask(visibleId, hiddenId) {
+    const visible = document.getElementById(visibleId);
+    const hidden = document.getElementById(hiddenId);
+
+    if (!visible || !hidden) return;
+
+    visible.addEventListener('input', function () {
+        visible.value = formatMoney(visible.value);
+        hidden.value = unformatMoney(visible.value);
+    });
+
+    visible.addEventListener('blur', function () {
+        hidden.value = unformatMoney(visible.value);
+    });
+
+    hidden.value = unformatMoney(visible.value);
+}
 
 function toggleCampos() {
     const tipo = document.getElementById('tipo_veiculo')?.value;
@@ -386,33 +468,48 @@ function toggleCampos() {
     }
 }
 
-function removerDestaqueNova() {
-    const input = document.getElementById('imagem_destaque');
-    const preview = document.getElementById('preview_destaque');
+function setupDrop(areaId, inputId, callback) {
+    const area = document.getElementById(areaId);
+    const input = document.getElementById(inputId);
 
-    if (input) input.value = '';
-    if (preview) preview.innerHTML = '';
+    if (!area || !input) return;
+
+    area.addEventListener('click', () => input.click());
+
+    area.addEventListener('dragover', e => {
+        e.preventDefault();
+        area.classList.add('dragover');
+    });
+
+    area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+
+    area.addEventListener('drop', e => {
+        e.preventDefault();
+        area.classList.remove('dragover');
+        callback(Array.from(e.dataTransfer.files));
+    });
+
+    input.addEventListener('change', () => callback(Array.from(input.files)));
 }
 
-function renderPreviewDestaque() {
+function renderDestaque(files) {
     const input = document.getElementById('imagem_destaque');
     const preview = document.getElementById('preview_destaque');
+    const file = files[0];
 
-    if (!input || !preview) return;
+    if (!file || !file.type.startsWith('image/')) return;
 
-    preview.innerHTML = '';
-
-    const file = input.files[0];
-
-    if (!file) return;
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
 
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = e => {
         preview.innerHTML = `
             <div class="preview-item">
-                <button type="button" class="remove-img" onclick="removerDestaqueNova()">×</button>
-                <img src="${e.target.result}">
+                <button type="button" class="remove-img" onclick="removerDestaque()">×</button>
+                <img src="${e.target.result}" alt="Nova destaque">
                 <span>Nova</span>
             </div>
         `;
@@ -421,33 +518,76 @@ function renderPreviewDestaque() {
     reader.readAsDataURL(file);
 }
 
-function atualizarInputFotos() {
-    const input = document.getElementById('fotos_input');
-    const dataTransfer = new DataTransfer();
-
-    fotosSelecionadas.forEach(file => {
-        dataTransfer.items.add(file);
-    });
-
-    input.files = dataTransfer.files;
+function removerDestaque() {
+    document.getElementById('imagem_destaque').value = '';
+    document.getElementById('preview_destaque').innerHTML = '';
 }
 
-function renderPreviewFotos() {
+function adicionarFotos(files) {
+    files.forEach(file => {
+        if (file.type.startsWith('image/')) {
+            fotosSelecionadas.push(file);
+        }
+    });
+
+    if (fotosSelecionadas.length > 15) {
+        alert('Você pode enviar no máximo 15 fotos novas.');
+        fotosSelecionadas = fotosSelecionadas.slice(0, 15);
+    }
+
+    renderFotos();
+}
+
+function atualizarInputFotos() {
+    const input = document.getElementById('fotos_input');
+    const dt = new DataTransfer();
+
+    fotosSelecionadas.forEach(file => dt.items.add(file));
+    input.files = dt.files;
+}
+
+function renderFotos() {
     const preview = document.getElementById('preview_imagens');
     preview.innerHTML = '';
 
     fotosSelecionadas.forEach((file, index) => {
         const reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = e => {
             const div = document.createElement('div');
             div.className = 'preview-item';
+            div.draggable = true;
+            div.dataset.index = index;
 
             div.innerHTML = `
-                <button type="button" class="remove-img" onclick="removerFotoNova(${index})">×</button>
-                <img src="${e.target.result}">
+                <button type="button" class="remove-img" onclick="removerFoto(${index})">×</button>
+                <img src="${e.target.result}" alt="Nova foto ${index + 1}">
                 <span>Nova ${index + 1}</span>
             `;
+
+            div.addEventListener('dragstart', () => {
+                draggedIndex = index;
+                div.classList.add('dragging');
+            });
+
+            div.addEventListener('dragend', () => {
+                draggedIndex = null;
+                div.classList.remove('dragging');
+            });
+
+            div.addEventListener('dragover', e => e.preventDefault());
+
+            div.addEventListener('drop', e => {
+                e.preventDefault();
+                const targetIndex = Number(div.dataset.index);
+
+                if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+                const moved = fotosSelecionadas.splice(draggedIndex, 1)[0];
+                fotosSelecionadas.splice(targetIndex, 0, moved);
+
+                renderFotos();
+            });
 
             preview.appendChild(div);
         };
@@ -458,28 +598,43 @@ function renderPreviewFotos() {
     atualizarInputFotos();
 }
 
-function removerFotoNova(index) {
+function removerFoto(index) {
     fotosSelecionadas.splice(index, 1);
-    renderPreviewFotos();
+    renderFotos();
+}
+
+function deletarFotoAntiga(id) {
+    if (!confirm('Remover esta foto?')) return;
+
+    fetch("{{ url('/admin/veiculos/foto') }}/" + id, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const item = document.getElementById('foto-antiga-' + id);
+            if (item) item.remove();
+        } else {
+            alert('Não foi possível remover a foto.');
+        }
+    })
+    .catch(() => alert('Erro ao remover a foto.'));
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    setupMoneyMask('preco_formatado', 'preco');
+    setupMoneyMask('preco_antigo_formatado', 'preco_antigo');
+
     toggleCampos();
 
     document.getElementById('tipo_veiculo')?.addEventListener('change', toggleCampos);
-    document.getElementById('imagem_destaque')?.addEventListener('change', renderPreviewDestaque);
 
-    document.getElementById('fotos_input')?.addEventListener('change', function () {
-        const novasFotos = Array.from(this.files);
-
-        novasFotos.forEach(file => {
-            if (file.type.startsWith('image/')) {
-                fotosSelecionadas.push(file);
-            }
-        });
-
-        renderPreviewFotos();
-    });
+    setupDrop('dropDestaque', 'imagem_destaque', renderDestaque);
+    setupDrop('dropFotos', 'fotos_input', adicionarFotos);
 });
 </script>
 @endsection

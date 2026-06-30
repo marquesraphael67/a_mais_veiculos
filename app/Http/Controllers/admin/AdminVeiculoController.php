@@ -198,4 +198,14 @@ class AdminVeiculoController extends Controller
         
         return response()->json(['success' => true]);
     }
+    
+    public function toggleAtivo($id)
+{
+    $veiculo = \App\Models\Veiculo::findOrFail($id);
+
+    $veiculo->ativo = !$veiculo->ativo;
+    $veiculo->save();
+
+    return redirect()->back()->with('success', 'Vitrine atualizada com sucesso.');
+}
 }

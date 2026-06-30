@@ -135,15 +135,49 @@
                         <span><i class="fas fa-palette me-1"></i> {{ $veiculo->cor ?? 'N/I' }}</span>
                     </div>
 
-                    <div class="card-actions">
-                        <a href="{{ route('admin.veiculos.edit', $veiculo->id) }}" class="btn-edit">
-                            <i class="fas fa-edit me-1"></i> Editar
-                        </a>
+                    <div class="mb-3">
 
-                        <button type="button" class="btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $veiculo->id }}">
-                            <i class="fas fa-trash me-1"></i> Excluir
-                        </button>
-                    </div>
+    <form action="{{ route('admin.veiculos.toggle-ativo',$veiculo->id) }}" method="POST">
+        @csrf
+        @method('PATCH')
+
+        @if($veiculo->ativo)
+
+            <button class="btn btn-success w-100 rounded-pill fw-bold">
+                <i class="fas fa-eye"></i>
+                Na vitrine
+            </button>
+
+        @else
+
+            <button class="btn btn-secondary w-100 rounded-pill fw-bold">
+                <i class="fas fa-eye-slash"></i>
+                Oculto
+            </button>
+
+        @endif
+
+    </form>
+
+</div>
+
+<div class="card-actions">
+
+    <a href="{{ route('admin.veiculos.edit',$veiculo->id) }}" class="btn-edit">
+        <i class="fas fa-edit me-1"></i>
+        Editar
+    </a>
+
+    <button
+        type="button"
+        class="btn-delete"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteModal{{ $veiculo->id }}">
+        <i class="fas fa-trash me-1"></i>
+        Excluir
+    </button>
+
+</div>
                 </div>
             </div>
         </div>

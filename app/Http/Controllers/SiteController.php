@@ -2,42 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Veiculo;
 use App\Models\Marca;
+use App\Models\Veiculo;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
     public function index()
     {
-        // Removemos o 'com fotos' por enquanto
-        $veiculos = Veiculo::with('marca')->where('status', 'disponivel')->get();
-        $marcas = Marca::all();
+        $veiculos = Veiculo::with('marca')
+            ->where('status', 'disponivel')
+            ->where('ativo', true)
+            ->latest()
+            ->get();
+
+        $marcas = Marca::orderBy('nome')->get();
+
         return view('site.home', compact('veiculos', 'marcas'));
     }
-    
+
     public function show($id)
-{
-    // Carregar o veículo com as fotos da galeria
-    $veiculo = Veiculo::with('marca', 'fotos')->findOrFail($id);
-    return view('site.detalhes', compact('veiculo'));
-}
-    
+    {
+        $veiculo = Veiculo::with('marca', 'fotos')
+            ->where('ativo', true)
+            ->findOrFail($id);
+
+        return view('site.detalhes', compact('veiculo'));
+    }
+
     public function filtrar(Request $request)
     {
-        $query = Veiculo::with('marca')->where('status', 'disponivel');
-        
-        if ($request->marca_id) {
+        $query = Veiculo::with('marca')
+            ->where('status', 'disponivel')
+            ->where('ativo', true);
+
+        if ($request->filled('marca_id')) {
             $query->where('marca_id', $request->marca_id);
         }
-        if ($request->preco_max) {
+
+        if ($request->filled('preco_max')) {
             $query->where('preco', '<=', $request->preco_max);
         }
-        if ($request->ano_min) {
+
+        if ($request->filled('ano_min')) {
             $query->where('ano', '>=', $request->ano_min);
         }
-        
-        $veiculos = $query->get();
+
+        $veiculos = $query
+            ->latest()
+            ->get();
+
         return response()->json($veiculos);
     }
 }

@@ -3,6 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('content')
+@php
+    $veiculosNaVitrine = $veiculosNaVitrine ?? 0;
+    $veiculosOcultos = $veiculosOcultos ?? 0;
+@endphp
+
 <style>
     body { background: #f5f7fb; }
 
@@ -16,7 +21,7 @@
     }
 
     .dash-hero h2 {
-        font-weight: 900;
+        font-weight: 950;
         margin: 0;
     }
 
@@ -32,7 +37,7 @@
         border-radius: 14px;
         padding: 11px 15px;
         text-decoration: none;
-        font-weight: 800;
+        font-weight: 900;
         transition: .2s;
     }
 
@@ -52,12 +57,29 @@
     .stat-card {
         padding: 22px;
         height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         transition: .25s;
     }
 
     .stat-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 16px 35px rgba(0,0,0,.08);
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: 950;
+        margin: 0;
+        color: #111827;
+    }
+
+    .stat-label {
+        color: #6b7280;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 800;
     }
 
     .stat-icon {
@@ -71,27 +93,13 @@
         font-size: 24px;
     }
 
-    .stat-number {
-        font-size: 33px;
-        font-weight: 900;
-        margin: 0;
-        color: #111827;
-    }
-
-    .stat-label {
-        color: #6b7280;
-        margin: 0;
-        font-size: 14px;
-        font-weight: 700;
-    }
-
     .panel-card {
         padding: 24px;
         height: 100%;
     }
 
     .panel-title {
-        font-weight: 900;
+        font-weight: 950;
         color: #111827;
         font-size: 18px;
         margin-bottom: 18px;
@@ -132,24 +140,34 @@
         flex-shrink: 0;
     }
 
-    .brand-item {
+    .alert-item {
+        padding: 15px;
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 18px;
+        margin-bottom: 12px;
         display: flex;
         justify-content: space-between;
+        gap: 12px;
         align-items: center;
-        padding: 13px 0;
-        border-bottom: 1px solid #f0f2f7;
     }
 
-    .brand-item:last-child { border-bottom: 0; }
+    .alert-item strong {
+        color: #111827;
+    }
 
-    .brand-count {
-        background: #eef4ff;
-        color: #1e3c72;
-        font-weight: 800;
-        padding: 6px 12px;
+    .alert-badge {
+        padding: 7px 12px;
         border-radius: 999px;
         font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
     }
+
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-gray { background: #e5e7eb; color: #374151; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
 
     .vehicle-table {
         width: 100%;
@@ -160,11 +178,13 @@
     .vehicle-table thead th {
         color: #6b7280;
         font-size: 13px;
-        font-weight: 800;
+        font-weight: 900;
         padding: 0 14px 8px;
     }
 
-    .vehicle-table tbody tr { background: #f9fafb; }
+    .vehicle-table tbody tr {
+        background: #f9fafb;
+    }
 
     .vehicle-table tbody td {
         padding: 14px;
@@ -181,15 +201,8 @@
         font-weight: 900;
     }
 
-    .status-disponivel {
-        background: #dcfce7;
-        color: #166534;
-    }
-
-    .status-vendido {
-        background: #fee2e2;
-        color: #991b1b;
-    }
+    .status-disponivel { background: #dcfce7; color: #166534; }
+    .status-vendido { background: #fee2e2; color: #991b1b; }
 
     .empty-box {
         text-align: center;
@@ -199,7 +212,7 @@
 
     @media (max-width: 768px) {
         .dash-hero { padding: 22px; }
-        .vehicle-table { min-width: 700px; }
+        .vehicle-table { min-width: 760px; }
     }
 </style>
 
@@ -207,7 +220,7 @@
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
             <h2><i class="fas fa-gauge-high me-2"></i> Dashboard</h2>
-            <p>Bem-vindo de volta, {{ Auth::user()->name ?? 'Administrador' }}.</p>
+            <p>Resumo rápido da vitrine, estoque e veículos cadastrados.</p>
         </div>
 
         <div class="d-flex gap-2 flex-wrap">
@@ -215,8 +228,8 @@
                 <i class="fas fa-plus me-1"></i> Novo veículo
             </a>
 
-            <a href="{{ route('admin.marcas.create') }}" class="quick-btn">
-                <i class="fas fa-tag me-1"></i> Nova marca
+            <a href="{{ route('admin.veiculos.index') }}" class="quick-btn">
+                <i class="fas fa-car me-1"></i> Gerenciar veículos
             </a>
         </div>
     </div>
@@ -224,7 +237,7 @@
 
 <div class="row g-3 mb-4">
     <div class="col-lg-3 col-md-6">
-        <div class="stat-card d-flex justify-content-between align-items-center">
+        <div class="stat-card">
             <div>
                 <h3 class="stat-number">{{ $totalVeiculos ?? 0 }}</h3>
                 <p class="stat-label">Total de veículos</p>
@@ -236,19 +249,31 @@
     </div>
 
     <div class="col-lg-3 col-md-6">
-        <div class="stat-card d-flex justify-content-between align-items-center">
+        <div class="stat-card">
             <div>
-                <h3 class="stat-number">{{ $disponiveis ?? 0 }}</h3>
-                <p class="stat-label">Disponíveis</p>
+                <h3 class="stat-number">{{ $veiculosNaVitrine }}</h3>
+                <p class="stat-label">Na vitrine</p>
             </div>
             <div class="stat-icon" style="background: linear-gradient(135deg, #16a34a, #22c55e);">
-                <i class="fas fa-check"></i>
+                <i class="fas fa-eye"></i>
             </div>
         </div>
     </div>
 
     <div class="col-lg-3 col-md-6">
-        <div class="stat-card d-flex justify-content-between align-items-center">
+        <div class="stat-card">
+            <div>
+                <h3 class="stat-number">{{ $veiculosOcultos }}</h3>
+                <p class="stat-label">Ocultos</p>
+            </div>
+            <div class="stat-icon" style="background: linear-gradient(135deg, #64748b, #94a3b8);">
+                <i class="fas fa-eye-slash"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="stat-card">
             <div>
                 <h3 class="stat-number">{{ $vendidos ?? 0 }}</h3>
                 <p class="stat-label">Vendidos</p>
@@ -258,22 +283,10 @@
             </div>
         </div>
     </div>
-
-    <div class="col-lg-3 col-md-6">
-        <div class="stat-card d-flex justify-content-between align-items-center">
-            <div>
-                <h3 class="stat-number">{{ $totalMarcas ?? 0 }}</h3>
-                <p class="stat-label">Marcas cadastradas</p>
-            </div>
-            <div class="stat-icon" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">
-                <i class="fas fa-tags"></i>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-lg-5">
+    <div class="col-lg-4">
         <div class="panel-card">
             <div class="panel-title">
                 <i class="fas fa-bolt text-warning"></i>
@@ -284,15 +297,15 @@
                 <div class="action-icon"><i class="fas fa-plus"></i></div>
                 <div>
                     <strong>Cadastrar veículo</strong>
-                    <div class="text-muted small">Adicionar carro, moto, caminhão ou náutico.</div>
+                    <div class="text-muted small">Adicionar novo veículo ao estoque.</div>
                 </div>
             </a>
 
             <a href="{{ route('admin.veiculos.index') }}" class="action-card">
                 <div class="action-icon"><i class="fas fa-list"></i></div>
                 <div>
-                    <strong>Gerenciar veículos</strong>
-                    <div class="text-muted small">Editar, vender ou remover veículos.</div>
+                    <strong>Gerenciar vitrine</strong>
+                    <div class="text-muted small">Ativar ou ocultar veículos do site.</div>
                 </div>
             </a>
 
@@ -300,33 +313,44 @@
                 <div class="action-icon"><i class="fas fa-tags"></i></div>
                 <div>
                     <strong>Gerenciar marcas</strong>
-                    <div class="text-muted small">Cadastrar e organizar marcas.</div>
+                    <div class="text-muted small">Organizar marcas cadastradas.</div>
                 </div>
             </a>
         </div>
     </div>
 
-    <div class="col-lg-7">
+    <div class="col-lg-8">
         <div class="panel-card">
             <div class="panel-title">
-                <i class="fas fa-trophy text-warning"></i>
-                Top marcas
+                <i class="fas fa-circle-info text-primary"></i>
+                Situação do estoque
             </div>
 
-            @forelse($topMarcas ?? [] as $marca)
-                <div class="brand-item">
-                    <div>
-                        <strong>{{ $marca->nome }}</strong>
-                        <div class="text-muted small">Marca cadastrada</div>
-                    </div>
-                    <span class="brand-count">{{ $marca->veiculos_count }} veículo(s)</span>
+            <div class="alert-item">
+                <div>
+                    <strong>Veículos disponíveis</strong>
+                    <div class="text-muted small">Podem ser anunciados na vitrine.</div>
                 </div>
-            @empty
-                <div class="empty-box">
-                    <i class="fas fa-tags fa-2x mb-2"></i>
-                    <p class="mb-0">Nenhuma marca cadastrada.</p>
+                <span class="alert-badge badge-green">{{ $disponiveis ?? 0 }}</span>
+            </div>
+
+            <div class="alert-item">
+                <div>
+                    <strong>Veículos ocultos</strong>
+                    <div class="text-muted small">Estão no painel, mas não aparecem para clientes.</div>
                 </div>
-            @endforelse
+                <span class="alert-badge badge-gray">{{ $veiculosOcultos }}</span>
+            </div>
+
+            <div class="alert-item">
+                <div>
+                    <strong>Valor total listado</strong>
+                    <div class="text-muted small">Soma dos veículos cadastrados.</div>
+                </div>
+                <span class="alert-badge badge-blue">
+                    R$ {{ number_format($valorTotalEstoque ?? 0, 0, ',', '.') }}
+                </span>
+            </div>
         </div>
     </div>
 </div>
@@ -347,11 +371,11 @@
         <table class="vehicle-table">
             <thead>
                 <tr>
-                    
                     <th>Veículo</th>
                     <th>Ano</th>
                     <th>Preço</th>
                     <th>Status</th>
+                    <th>Vitrine</th>
                     <th class="text-end">Ação</th>
                 </tr>
             </thead>
@@ -359,20 +383,35 @@
             <tbody>
                 @forelse($ultimosVeiculos ?? [] as $veiculo)
                     <tr>
-                        
                         <td>
                             <strong>{{ $veiculo->modelo }}</strong>
                             <div class="text-muted small">{{ $veiculo->marca->nome ?? 'Sem marca' }}</div>
                         </td>
+
                         <td>{{ $veiculo->ano }}</td>
+
                         <td class="fw-bold text-success">
                             R$ {{ number_format($veiculo->preco, 2, ',', '.') }}
                         </td>
+
                         <td>
                             <span class="status-badge {{ $veiculo->status == 'disponivel' ? 'status-disponivel' : 'status-vendido' }}">
                                 {{ $veiculo->status == 'disponivel' ? 'Disponível' : 'Vendido' }}
                             </span>
                         </td>
+
+                        <td>
+                            @if($veiculo->ativo)
+                                <span class="alert-badge badge-green">
+                                    <i class="fas fa-eye me-1"></i> Na vitrine
+                                </span>
+                            @else
+                                <span class="alert-badge badge-gray">
+                                    <i class="fas fa-eye-slash me-1"></i> Oculto
+                                </span>
+                            @endif
+                        </td>
+
                         <td class="text-end">
                             <a href="{{ route('admin.veiculos.edit', $veiculo->id) }}" class="btn btn-sm btn-outline-primary rounded-pill">
                                 Editar

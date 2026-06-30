@@ -12,12 +12,13 @@ return new class extends Migration
     public function up()
 {
     Schema::create('fotos_veiculos', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('veiculo_id')->constrained('veiculos')->onDelete('cascade');
-        $table->string('foto_path');
-        $table->integer('ordem')->default(0);
-        $table->timestamps();
-    });
+    $table->id();
+    $table->foreignId('veiculo_id')->constrained('veiculos')->onDelete('cascade');
+    $table->string('foto_path');
+    $table->integer('ordem')->default(0);
+    $table->boolean('principal')->default(false);
+    $table->timestamps();
+});
 }
 
     /**

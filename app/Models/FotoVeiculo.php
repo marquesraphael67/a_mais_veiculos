@@ -9,8 +9,11 @@ class FotoVeiculo extends Model
     protected $table = 'fotos_veiculos';
     
     protected $fillable = [
-        'veiculo_id', 'caminho', 'foto_path', 'ordem', 'principal'
-    ];
+    'veiculo_id',
+    'foto_path',
+    'ordem',
+    'principal',
+];
     
     public function veiculo()
     {

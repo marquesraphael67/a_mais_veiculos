@@ -25,10 +25,11 @@
 
 <div class="vehicle-show-page">
     <div class="container">
-        <div class="breadcrumb-mini">
-            <a href="{{ route('home') }}">Início</a>
-            <i class="fas fa-chevron-right"></i>
-            <span>{{ $veiculo->marca->nome }} {{ $veiculo->modelo }}</span>
+        <div class="mb-4">
+            <a href="{{ route('home') }}" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para os veículos
+            </a>
         </div>
 
         <div class="row g-4">
@@ -43,15 +44,6 @@
                                 <p>Sem imagem cadastrada</p>
                             </div>
                         @endif
-
-                        <span class="photo-counter">
-                            <i class="fas fa-images"></i>
-                            {{ $todasFotos->count() }} foto(s)
-                        </span>
-
-                        <span class="status-pill {{ $veiculo->status == 'disponivel' ? 'available' : 'sold' }}">
-                            {{ $veiculo->status == 'disponivel' ? 'Disponível' : 'Vendido' }}
-                        </span>
                     </div>
 
                     @if($todasFotos->count() > 1)
@@ -70,16 +62,6 @@
 
             <div class="col-lg-5">
                 <div class="info-card">
-                    <div class="type-label">
-                        @if($veiculo->tipo_veiculo == 'carro') 🚗 Carro
-                        @elseif($veiculo->tipo_veiculo == 'moto') 🏍️ Moto
-                        @elseif($veiculo->tipo_veiculo == 'caminhao') 🚛 Caminhão
-                        @elseif($veiculo->tipo_veiculo == 'jetski') 🌊 Jet Ski
-                        @elseif($veiculo->tipo_veiculo == 'lancha') ⛵ Lancha
-                        @else Veículo
-                        @endif
-                    </div>
-
                     <h1>{{ $veiculo->marca->nome }} {{ $veiculo->modelo }}</h1>
 
                     <div class="price-box">
@@ -166,23 +148,30 @@
 
 <style>
     .vehicle-show-page {
-        padding: 55px 0;
+        padding: 45px 0;
         background: #f5f7fb;
     }
 
-    .breadcrumb-mini {
-        display: flex;
+    .btn-back {
+        display: inline-flex;
         align-items: center;
-        gap: 9px;
-        margin-bottom: 22px;
-        color: #64748b;
-        font-weight: 700;
-        font-size: 14px;
+        gap: 10px;
+        text-decoration: none;
+        color: #1e3c72;
+        font-weight: 900;
+        font-size: 15px;
+        padding: 12px 18px;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 8px 20px rgba(0,0,0,.06);
+        transition: .25s;
     }
 
-    .breadcrumb-mini a {
+    .btn-back:hover {
+        transform: translateX(-4px);
         color: #dc3545;
-        text-decoration: none;
+        border-color: #dc3545;
     }
 
     .gallery-card,
@@ -216,35 +205,6 @@
 
     .main-photo-box img:hover {
         transform: scale(1.03);
-    }
-
-    .photo-counter,
-    .status-pill {
-        position: absolute;
-        top: 16px;
-        padding: 8px 13px;
-        border-radius: 999px;
-        color: white;
-        font-size: 12px;
-        font-weight: 900;
-        backdrop-filter: blur(8px);
-    }
-
-    .photo-counter {
-        left: 16px;
-        background: rgba(15, 23, 42, .85);
-    }
-
-    .status-pill {
-        right: 16px;
-    }
-
-    .status-pill.available {
-        background: rgba(22, 163, 74, .95);
-    }
-
-    .status-pill.sold {
-        background: rgba(220, 53, 69, .95);
     }
 
     .thumbs-row {
@@ -283,17 +243,6 @@
         padding: 28px;
         position: sticky;
         top: 95px;
-    }
-
-    .type-label {
-        display: inline-block;
-        background: #f1f5f9;
-        color: #334155;
-        border-radius: 999px;
-        padding: 7px 12px;
-        font-size: 13px;
-        font-weight: 900;
-        margin-bottom: 12px;
     }
 
     .info-card h1 {
@@ -435,7 +384,7 @@
 
     @media (max-width: 768px) {
         .vehicle-show-page {
-            padding: 35px 0;
+            padding: 30px 0;
         }
 
         .main-photo-box {

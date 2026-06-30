@@ -380,8 +380,7 @@
         </div>
     </header>
 
-    @hasSection('hideHero')
-    @else
+    @if(request()->routeIs('home'))
         <section class="hero">
             <div class="container">
                 <div class="hero-content">
@@ -436,8 +435,14 @@
                 <div class="col-lg-4">
                     <h5 class="fw-bold mb-3">Redes sociais</h5>
                     <div class="d-flex gap-2 justify-content-lg-start justify-content-center">
-                        <a href="https://www.facebook.com/profile.php?id=61578578399359&sk=photos&locale=pt_BR" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/amaisveiculos/" class="social-btn"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61578578399359&sk=photos&locale=pt_BR" class="social-btn">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+
+                        <a href="https://www.instagram.com/amaisveiculos/" class="social-btn">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+
                         <a href="https://wa.me/5518996737473" target="_blank" class="social-btn">
                             <i class="fab fa-whatsapp"></i>
                         </a>

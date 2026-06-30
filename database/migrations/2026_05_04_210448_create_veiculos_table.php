@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('descricao');
             $table->string('imagem_destaque');
             $table->enum('status', ['disponivel', 'vendido'])->default('disponivel');
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }
