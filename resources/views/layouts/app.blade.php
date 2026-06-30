@@ -3,308 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A+ Veículos - @yield('title')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>A+ Veículos - @yield('title', 'Início')</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e3c72;
+            --accent: #dc3545;
+            --light: #f5f7fb;
+            --text: #111827;
+            --muted: #6b7280;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
+            background: var(--light);
+            color: var(--text);
         }
-        
-        /* Header profissional */
-        .header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
+
+        a {
+            text-decoration: none;
         }
-        
+
+        .site-header {
+            background: rgba(15, 23, 42, .96);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,.12);
+        }
+
         .navbar {
-            padding: 20px 0;
+            padding: 16px 0;
         }
-        
+
         .navbar-brand {
+            color: white !important;
             font-size: 28px;
-            font-weight: bold;
-            color: white !important;
+            font-weight: 900;
+            letter-spacing: -.5px;
         }
-        
+
         .navbar-brand span {
-            color: #dc3545;
+            color: var(--accent);
         }
-        
+
+        .logo-img {
+            height: 52px;
+            object-fit: contain;
+        }
+
+        .navbar-toggler {
+            border: 1px solid rgba(255,255,255,.25);
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .navbar-toggler-icon {
+            filter: invert(1);
+        }
+
         .nav-link {
-            color: white !important;
-            font-weight: 500;
-            transition: 0.3s;
+            color: rgba(255,255,255,.82) !important;
+            font-weight: 600;
+            margin-left: 14px;
+            transition: .2s;
         }
-        
+
         .nav-link:hover {
-            color: #dc3545 !important;
+            color: white !important;
         }
-        
-        /* Hero section */
-        .hero {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
+
+        .btn-header {
+            background: var(--accent);
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 999px;
+            margin-left: 18px;
+            font-weight: 700;
+            transition: .2s;
         }
-        
-        .hero h1 {
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        .hero p {
-            font-size: 20px;
-            opacity: 0.9;
-        }
-        
-        /* Filtros */
-        .filtros-section {
-            background: white;
-            padding: 40px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .filtro-card {
-            background: white;
-            border-radius: 10px;
-        }
-        
-        .btn-filtrar {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-        
-        .btn-filtrar:hover {
-            background: #c82333;
+
+        .btn-header:hover {
+            background: #b91c1c;
             transform: translateY(-2px);
         }
-        
-        .btn-limpar {
-            background: #6c757d;
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(15,23,42,.92), rgba(30,60,114,.88)),
+                url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
             color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 5px;
-            transition: 0.3s;
+            padding: 95px 0 110px;
         }
-        
-        .btn-limpar:hover {
-            background: #5a6268;
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            right: -140px;
+            top: 40px;
+            background: rgba(220, 53, 69, .18);
+            border-radius: 50%;
+            filter: blur(5px);
         }
-        
-        /* Cards de veículos */
-        .veiculos-section {
-            padding: 60px 0;
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 760px;
         }
-        
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.18);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(38px, 5vw, 64px);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            font-size: 19px;
+            color: rgba(255,255,255,.82);
+            max-width: 620px;
+            margin-bottom: 28px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-main {
+            background: var(--accent);
+            color: white;
+            border-radius: 999px;
+            padding: 13px 24px;
+            font-weight: 800;
+            transition: .2s;
+        }
+
+        .btn-main:hover {
+            background: #b91c1c;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-main {
+            border: 1px solid rgba(255,255,255,.35);
+            color: white;
+            border-radius: 999px;
+            padding: 13px 24px;
+            font-weight: 800;
+            transition: .2s;
+        }
+
+        .btn-outline-main:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        main {
+            min-height: 55vh;
+        }
+
         .section-title {
             text-align: center;
-            margin-bottom: 50px;
-            color: #1e3c72;
-            font-weight: bold;
+            margin-bottom: 45px;
+            color: var(--primary);
+            font-weight: 900;
         }
-        
+
         .card-veiculo {
             background: white;
-            border-radius: 15px;
+            border-radius: 22px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+            border: 1px solid #eef0f5;
+            transition: .25s;
             margin-bottom: 30px;
-            cursor: pointer;
         }
-        
+
         .card-veiculo:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 18px 40px rgba(0,0,0,.13);
         }
-        
+
         .card-img {
-            height: 220px;
+            height: 230px;
             object-fit: cover;
             width: 100%;
         }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
+
         .card-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #1e3c72;
-            margin-bottom: 10px;
+            color: var(--primary);
+            font-weight: 900;
         }
-        
+
         .card-marca {
-            color: #dc3545;
-            font-weight: 600;
-            margin-bottom: 15px;
+            color: var(--accent);
+            font-weight: 800;
         }
-        
-        .card-detalhes {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #666;
-        }
-        
+
         .card-preco {
-            font-size: 24px;
-            font-weight: bold;
-            color: #dc3545;
-            margin-bottom: 15px;
+            font-size: 25px;
+            font-weight: 900;
+            color: var(--accent);
         }
-        
+
         .btn-detalhes {
-            background: #1e3c72;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 12px;
             width: 100%;
-            transition: 0.3s;
+            font-weight: 800;
+            transition: .2s;
         }
-        
+
         .btn-detalhes:hover {
-            background: #2a5298;
-        }
-        
-        .badge-status {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #dc3545;
+            background: var(--secondary);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
         }
-        
-        /* Footer */
+
         .footer {
-            background: #1e3c72;
+            background: var(--primary);
             color: white;
-            padding: 40px 0;
-            margin-top: 60px;
+            padding: 55px 0 25px;
+            margin-top: 70px;
         }
-        
+
+        .footer p {
+            color: rgba(255,255,255,.72);
+        }
+
         .footer a {
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
+            color: rgba(255,255,255,.82);
+            transition: .2s;
         }
-        
+
         .footer a:hover {
-            color: #dc3545;
+            color: white;
         }
-        
-        /* Responsivo */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
+
+        .social-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            width: 58px;
+            height: 58px;
+            background: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            z-index: 999;
+            box-shadow: 0 12px 30px rgba(37,211,102,.35);
+        }
+
+        .whatsapp-float:hover {
+            color: white;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 991px) {
+            .btn-header {
+                margin-left: 0;
+                margin-top: 10px;
+                display: inline-block;
             }
+
+            .nav-link {
+                margin-left: 0;
+                padding: 10px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 70px 0 85px;
+            }
+
             .hero p {
                 font-size: 16px;
             }
+
+            .footer {
+                text-align: center;
+            }
         }
     </style>
+
+    @stack('styles')
 </head>
+
 <body>
-    <!-- Header -->
-    <header class="header">
+    <header class="site-header">
         <div class="container">
             <nav class="navbar navbar-expand-lg">
-                <div class="container-fluid px-0">
-                    <!-- LOGO - Mude aqui para colocar sua imagem -->
-                    <a class="navbar-brand" href="/">
-                        @if(file_exists(public_path('images/logo.png')))
-                            <img src="{{ asset('images/logo.png') }}" alt="A+ Veículos" style="height: 50px;">
-                        @else
-                            A+<span>Veículos</span>
-                        @endif
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#veiculos">Veículos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#contato">Contato</a>
-                            </li>
-                        </ul>
-                    </div>
+                <a class="navbar-brand" href="{{ route('home') }}">
+                    @if(file_exists(public_path('images/logo.png')))
+                        <img src="{{ asset('images/logo.png') }}" alt="A+ Veículos" class="logo-img">
+                    @else
+                        A+<span>Veículos</span>
+                    @endif
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home') }}">Início</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home') }}#veiculos">Veículos</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home') }}#contato">Contato</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="btn-header" href="https://wa.me/5518996737473" target="_blank">
+                                <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         </div>
     </header>
-    
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>Encontre o Veículo dos Seus Sonhos</h1>
-            <p>As melhores ofertas em carros seminovos de qualidade</p>
-        </div>
-    </section>
-    
-    <!-- Main Content -->
-    <main>
-        @yield('content')
-    </main>
-    
-    <!-- Footer -->
-    <footer class="footer" id="contato">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h4>A+<span style="color:#dc3545">Veículos</span></h4>
-                    <p>Excelência em venda de veículos seminovos com garantia de qualidade.</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h4>Contato</h4>
+
+    @hasSection('hideHero')
+    @else
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        Seminovos selecionados
+                    </div>
+
+                    <h1>Encontre o veículo ideal para você</h1>
+
                     <p>
-                        <i class="fas fa-phone me-2"></i> (11) 99999-9999<br>
-                        <i class="fas fa-envelope me-2"></i> contato@amaisveiculos.com<br>
-                        <i class="fas fa-map-marker-alt me-2"></i> São Paulo - SP
+                        Carros, motos e veículos selecionados com qualidade, transparência
+                        e atendimento profissional.
                     </p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h4>Redes Sociais</h4>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-white"><i class="fab fa-facebook fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-whatsapp fa-2x"></i></a>
+
+                    <div class="hero-actions">
+                        <a href="{{ route('home') }}#veiculos" class="btn-main">
+                            Ver veículos
+                        </a>
+
+                        <a href="https://wa.me/5518996737473" target="_blank" class="btn-outline-main">
+                            Falar com vendedor
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="text-center pt-4 border-top border-secondary">
-                <p>&copy; 2024 A+ Veículos - Todos os direitos reservados</p>
+        </section>
+    @endif
+
+    <main>
+        @yield('content')
+    </main>
+
+    <footer class="footer" id="contato">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h4 class="fw-bold mb-3">A+<span style="color:#dc3545">Veículos</span></h4>
+                    <p>
+                        Loja especializada em veículos seminovos, com atendimento rápido,
+                        negociação transparente e veículos selecionados.
+                    </p>
+                </div>
+
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3">Contato</h5>
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i> (18) 99673-7473</p>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i> contato@amaisveiculos.com</p>
+                    <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i> Presidente Epitácio - SP</p>
+                </div>
+
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3">Redes sociais</h5>
+                    <div class="d-flex gap-2 justify-content-lg-start justify-content-center">
+                        <a href="https://www.facebook.com/profile.php?id=61578578399359&sk=photos&locale=pt_BR" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/amaisveiculos/" class="social-btn"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/5518996737473" target="_blank" class="social-btn">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pt-4 mt-4 border-top border-secondary">
+                <p class="mb-0">&copy; {{ date('Y') }} A+ Veículos - Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <a href="https://wa.me/5518996737473" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    @stack('scripts')
 </body>
 </html>

@@ -6,13 +6,13 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class AdminUserSeeder extends Seeder
+class AdminSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         User::create([
             'name' => 'Administrador',
-            'email' => 'admin@aveiculos.com',
+            'email' => 'admin@veiculos.com',
             'password' => Hash::make('12345678'),
         ]);
     }

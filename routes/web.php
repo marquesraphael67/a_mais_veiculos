@@ -6,6 +6,11 @@ use App\Http\Controllers\Admin\AdminVeiculoController;
 use App\Http\Controllers\Admin\AdminMarcaController;
 use Illuminate\Support\Facades\Route;
 
+// Redireciona o auth padrão do Laravel para o login do admin
+Route::get('/login', function () {
+    return redirect()->route('admin.login');
+})->name('login');
+
 // ========== ROTAS DO SITE PÚBLICO ==========
 Route::get('/', [SiteController::class, 'index'])->name('home');
 Route::get('/veiculo/{id}', [SiteController::class, 'show'])->name('veiculo.show');
@@ -13,19 +18,21 @@ Route::post('/filtrar', [SiteController::class, 'filtrar'])->name('filtrar');
 
 // ========== ROTAS DO ADMIN ==========
 Route::prefix('admin')->name('admin.')->group(function () {
-    
-    // Rotas de login (acesso público)
+
+    // Login público
     Route::get('/login', [AdminController::class, 'login'])->name('login');
     Route::post('/auth', [AdminController::class, 'auth'])->name('auth');
-    Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
-    
-    // Rotas protegidas (requer autenticação)
+
+    // Logout protegido
+    Route::post('/logout', [AdminController::class, 'logout'])
+        ->middleware('auth')
+        ->name('logout');
+
+    // Rotas protegidas
     Route::middleware('auth')->group(function () {
-        
-        // Dashboard
+
         Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-        
-        // Rotas de Veículos
+
         Route::get('/veiculos', [AdminVeiculoController::class, 'index'])->name('veiculos.index');
         Route::get('/veiculos/observacoes', [AdminVeiculoController::class, 'observacoes'])->name('veiculos.observacoes');
         Route::get('/veiculos/create', [AdminVeiculoController::class, 'create'])->name('veiculos.create');
@@ -34,8 +41,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/veiculos/{id}', [AdminVeiculoController::class, 'update'])->name('veiculos.update');
         Route::delete('/veiculos/{id}', [AdminVeiculoController::class, 'destroy'])->name('veiculos.destroy');
         Route::delete('/veiculos/foto/{id}', [AdminVeiculoController::class, 'deleteFoto'])->name('veiculos.delete-foto');
-        
-        // Rotas de Marcas
+
         Route::get('/marcas', [AdminMarcaController::class, 'index'])->name('marcas.index');
         Route::get('/marcas/create', [AdminMarcaController::class, 'create'])->name('marcas.create');
         Route::post('/marcas', [AdminMarcaController::class, 'store'])->name('marcas.store');
