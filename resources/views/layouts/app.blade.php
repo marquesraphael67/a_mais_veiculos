@@ -18,11 +18,7 @@
             --muted: #6b7280;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -30,9 +26,7 @@
             color: var(--text);
         }
 
-        a {
-            text-decoration: none;
-        }
+        a { text-decoration: none; }
 
         .site-header {
             background: rgba(15, 23, 42, .96);
@@ -43,9 +37,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,.12);
         }
 
-        .navbar {
-            padding: 16px 0;
-        }
+        .navbar { padding: 16px 0; }
 
         .navbar-brand {
             color: white !important;
@@ -54,9 +46,7 @@
             letter-spacing: -.5px;
         }
 
-        .navbar-brand span {
-            color: var(--accent);
-        }
+        .navbar-brand span { color: var(--accent); }
 
         .logo-img {
             height: 52px;
@@ -67,13 +57,9 @@
             border: 1px solid rgba(255,255,255,.25);
         }
 
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
+        .navbar-toggler:focus { box-shadow: none; }
 
-        .navbar-toggler-icon {
-            filter: invert(1);
-        }
+        .navbar-toggler-icon { filter: invert(1); }
 
         .nav-link {
             color: rgba(255,255,255,.82) !important;
@@ -82,9 +68,7 @@
             transition: .2s;
         }
 
-        .nav-link:hover {
-            color: white !important;
-        }
+        .nav-link:hover { color: white !important; }
 
         .btn-header {
             background: var(--accent);
@@ -105,25 +89,15 @@
             position: relative;
             overflow: hidden;
             background:
-                linear-gradient(135deg, rgba(15,23,42,.92), rgba(30,60,114,.88)),
-                url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1600&q=80');
+                linear-gradient(135deg, rgba(15,23,42,.92), rgba(30, 59, 114, 0.34)),
+                url('images/racing.jpg') no-repeat center center;
             background-size: cover;
             background-position: center;
             color: white;
             padding: 95px 0 110px;
         }
 
-        .hero::after {
-            content: "";
-            position: absolute;
-            width: 420px;
-            height: 420px;
-            right: -140px;
-            top: 40px;
-            background: rgba(220, 53, 69, .18);
-            border-radius: 50%;
-            filter: blur(5px);
-        }
+        
 
         .hero-content {
             position: relative;
@@ -192,75 +166,18 @@
             color: var(--primary);
         }
 
-        main {
-            min-height: 55vh;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 45px;
-            color: var(--primary);
-            font-weight: 900;
-        }
-
-        .card-veiculo {
-            background: white;
-            border-radius: 22px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,.08);
-            border: 1px solid #eef0f5;
-            transition: .25s;
-            margin-bottom: 30px;
-        }
-
-        .card-veiculo:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 18px 40px rgba(0,0,0,.13);
-        }
-
-        .card-img {
-            height: 230px;
-            object-fit: cover;
-            width: 100%;
-        }
-
-        .card-title {
-            color: var(--primary);
-            font-weight: 900;
-        }
-
-        .card-marca {
-            color: var(--accent);
-            font-weight: 800;
-        }
-
-        .card-preco {
-            font-size: 25px;
-            font-weight: 900;
-            color: var(--accent);
-        }
-
-        .btn-detalhes {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            width: 100%;
-            font-weight: 800;
-            transition: .2s;
-        }
-
-        .btn-detalhes:hover {
-            background: var(--secondary);
-            color: white;
-        }
+        main { min-height: 55vh; }
 
         .footer {
             background: var(--primary);
             color: white;
-            padding: 55px 0 25px;
+            padding: 60px 0 25px;
             margin-top: 70px;
+        }
+
+        .footer h4,
+        .footer h5 {
+            font-weight: 900;
         }
 
         .footer p {
@@ -268,12 +185,25 @@
         }
 
         .footer a {
-            color: rgba(255,255,255,.82);
+            color: rgba(255,255,255,.86);
             transition: .2s;
         }
 
         .footer a:hover {
             color: white;
+        }
+
+        .footer-info-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: rgba(255,255,255,.78);
+        }
+
+        .footer-info-item i {
+            color: var(--accent);
+            margin-top: 4px;
+            width: 18px;
         }
 
         .social-btn {
@@ -284,6 +214,42 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .social-btn:hover {
+            background: var(--accent);
+        }
+
+        .map-card {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 22px;
+            padding: 12px;
+        }
+
+        .map-card iframe {
+            width: 100%;
+            height: 250px;
+            border: 0;
+            border-radius: 16px;
+        }
+
+        .btn-map {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: white !important;
+            border-radius: 999px;
+            padding: 12px 18px;
+            font-weight: 900;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .btn-map:hover {
+            background: #b91c1c;
         }
 
         .whatsapp-float {
@@ -331,7 +297,11 @@
             }
 
             .footer {
-                text-align: center;
+                text-align: left;
+            }
+
+            .map-card iframe {
+                height: 230px;
             }
         }
     </style>
@@ -340,128 +310,162 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="{{ route('home') }}">
-                    @if(file_exists(public_path('images/logo.png')))
-                        <img src="{{ asset('images/logo.png') }}" alt="A+ Veículos" class="logo-img">
-                    @else
-                        A+<span>Veículos</span>
-                    @endif
-                </a>
+<header class="site-header">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="{{ route('home') }}">
+                @if(file_exists(public_path('images/logo.png')))
+                    <img src="{{ asset('images/logo.png') }}" alt="A+ Veículos" class="logo-img">
+                @else
+                    A+<span>Veículos</span>
+                @endif
+            </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto align-items-lg-center">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('home') }}">Início</a>
-                        </li>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}">Início</a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('home') }}#veiculos">Veículos</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}#veiculos">Veículos</a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('home') }}#contato">Contato</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}#contato">Contato</a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="btn-header" href="https://wa.me/5518996737473" target="_blank">
-                                <i class="fab fa-whatsapp me-1"></i> WhatsApp
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    @if(request()->routeIs('home'))
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-badge">
-                        <i class="fas fa-shield-alt"></i>
-                        Seminovos selecionados
-                    </div>
-
-                    <h1>Encontre o veículo ideal para você</h1>
-
-                    <p>
-                        Carros, motos e veículos selecionados com qualidade, transparência
-                        e atendimento profissional.
-                    </p>
-
-                    <div class="hero-actions">
-                        <a href="{{ route('home') }}#veiculos" class="btn-main">
-                            Ver veículos
+                    <li class="nav-item">
+                        <a class="btn-header" href="https://wa.me/5518996737473" target="_blank">
+                            <i class="fab fa-whatsapp me-1"></i> WhatsApp
                         </a>
-
-                        <a href="https://wa.me/5518996737473" target="_blank" class="btn-outline-main">
-                            Falar com vendedor
-                        </a>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
-        </section>
-    @endif
+        </nav>
+    </div>
+</header>
 
-    <main>
-        @yield('content')
-    </main>
-
-    <footer class="footer" id="contato">
+@if(request()->routeIs('home'))
+    <section class="hero">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <h4 class="fw-bold mb-3">A+<span style="color:#dc3545">Veículos</span></h4>
-                    <p>
-                        Loja especializada em veículos seminovos, com atendimento rápido,
-                        negociação transparente e veículos selecionados.
-                    </p>
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Seminovos selecionados
                 </div>
 
-                <div class="col-lg-4">
-                    <h5 class="fw-bold mb-3">Contato</h5>
-                    <p class="mb-1"><i class="fas fa-phone me-2"></i> (18) 99673-7473</p>
-                    <p class="mb-1"><i class="fas fa-envelope me-2"></i> contato@amaisveiculos.com</p>
-                    <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i> Presidente Epitácio - SP</p>
+                <h1>Encontre o veículo ideal para você</h1>
+
+                <p>
+                    Carros, motos e veículos selecionados com qualidade, transparência
+                    e atendimento profissional.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{{ route('home') }}#veiculos" class="btn-main">
+                        Ver veículos
+                    </a>
+
+                    <a href="https://wa.me/5518996737473" target="_blank" class="btn-outline-main">
+                        Falar com vendedor
+                    </a>
                 </div>
-
-                <div class="col-lg-4">
-                    <h5 class="fw-bold mb-3">Redes sociais</h5>
-                    <div class="d-flex gap-2 justify-content-lg-start justify-content-center">
-                        <a href="https://www.facebook.com/profile.php?id=61578578399359&sk=photos&locale=pt_BR" class="social-btn">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-
-                        <a href="https://www.instagram.com/amaisveiculos/" class="social-btn">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-
-                        <a href="https://wa.me/5518996737473" target="_blank" class="social-btn">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center pt-4 mt-4 border-top border-secondary">
-                <p class="mb-0">&copy; {{ date('Y') }} A+ Veículos - Todos os direitos reservados.</p>
             </div>
         </div>
-    </footer>
+    </section>
+@endif
 
-    <a href="https://wa.me/5518996737473" target="_blank" class="whatsapp-float">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+<main>
+    @yield('content')
+</main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<footer class="footer" id="contato">
+    <div class="container">
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-4">
+                <h4 class="mb-3">A+<span style="color:#dc3545">Veículos</span></h4>
+                <p>
+                    Loja especializada em veículos seminovos, com atendimento rápido,
+                    negociação transparente e veículos selecionados.
+                </p>
 
-    @stack('scripts')
+                <div class="d-flex gap-2 mt-3">
+                    <a href="https://www.facebook.com/profile.php?id=61578578399359&sk=photos&locale=pt_BR" class="social-btn" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+
+                    <a href="https://www.instagram.com/amaisveiculos/" class="social-btn" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="https://wa.me/5518996737473" target="_blank" class="social-btn">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <h5 class="mb-3">Atendimento</h5>
+
+                <div class="footer-info-item">
+                    <i class="fas fa-phone"></i>
+                    <span>(18) 99673-7473</span>
+                </div>
+
+                <div class="footer-info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>contato@amaisveiculos.com</span>
+                </div>
+
+                <div class="footer-info-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Segunda a sábado • 08h às 18h</span>
+                </div>
+
+                <div class="footer-info-item">
+                    <i class="fas fa-location-dot"></i>
+                    <span>Av. Tibiriçá, 995<br>Presidente Epitácio - SP</span>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <h5 class="mb-3">Nossa localização</h5>
+
+                <div class="map-card">
+                    <iframe
+                        src="https://www.google.com/maps?q=995%20Av.%20Tibiri%C3%A7%C3%A1,%20Presidente%20Epit%C3%A1cio,%20SP&output=embed"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+
+                    <a href="https://www.google.com/maps/search/?api=1&query=995%20Av.%20Tibiri%C3%A7%C3%A1%20Presidente%20Epit%C3%A1cio%20SP"
+                       target="_blank"
+                       class="btn-map">
+                        <i class="fas fa-location-arrow"></i>
+                        Como chegar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center pt-4 mt-4 border-top border-secondary">
+            <p class="mb-0">&copy; {{ date('Y') }} A+ Veículos - Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/5518996737473" target="_blank" class="whatsapp-float">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+@stack('scripts')
 </body>
 </html>
